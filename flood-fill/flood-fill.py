@@ -3,18 +3,19 @@ class Solution:
         if image[sr][sc] == newColor:
             return image
         
+        original_color = image[sr][sc]
+        
         def dfs(i, j):
             if image[i][j] == original_color:
                 image[i][j] = newColor
                 if i > 0:
                     dfs(i - 1, j)
-                if j < len(image[0]) - 1:
+                if j + 1 < len(image[0]):
                     dfs(i, j + 1)
-                if i < len(image) - 1:
+                if i + 1 < len(image):
                     dfs(i + 1, j)
                 if j > 0:
                     dfs(i, j - 1)
-                    
-        original_color = image[sr][sc]                
+        
         dfs(sr, sc)
         return image
