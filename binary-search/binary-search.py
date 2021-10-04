@@ -5,10 +5,6 @@ class Solution:
             mid = i + (j - i) // 2
             if nums[mid] == target:
                 return mid
-            elif nums[i] == target:
-                return i
-            elif nums[j] == target:
-                return j
             elif target < nums[mid]:
                 j = mid - 1
             else:
