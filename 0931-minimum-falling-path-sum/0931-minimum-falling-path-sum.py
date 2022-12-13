@@ -9,4 +9,4 @@ class Solution:
                 else:
                     min_val = min(matrix[i - 1][j - 1], matrix[i - 1][j], matrix[i - 1][j + 1])
                 matrix[i][j] += min_val
-        return min(matrix[len(matrix[0]) - 1])
+        return min(matrix[-1])
