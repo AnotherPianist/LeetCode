@@ -83,25 +83,75 @@
 #################################################################
         #                 Counting Sort                  #
 
-from collections import defaultdict
+# from collections import defaultdict
+
+
+# class Solution:
+#     def sortArray(self, nums: List[int]) -> List[int]:
+#         count = defaultdict(int)
+        
+#         min_val, max_val = float("inf"), float("-inf")
+        
+#         for num in nums:
+#             min_val = min(min_val, num)
+#             max_val = max(max_val, num)
+#             count[num] += 1
+        
+#         i = 0
+#         for num in range(min_val, max_val + 1, 1):
+#             while count[num]:
+#                 nums[i] = num
+#                 i += 1
+#                 count[num] -= 1
+        
+#         return nums
+    
+    
+
+#################################################################
+        #                 Radix Sort                  #
+
+from collections import deque
 
 
 class Solution:
     def sortArray(self, nums: List[int]) -> List[int]:
-        count = defaultdict(int)
-        
-        min_val, max_val = float("inf"), float("-inf")
-        
+        max_val = nums[0]
         for num in nums:
-            min_val = min(min_val, num)
-            max_val = max(max_val, num)
-            count[num] += 1
+            max_val = max(max_val, abs(num))
         
-        i = 0
-        for num in range(min_val, max_val + 1, 1):
-            while count[num]:
-                nums[i] = num
-                i += 1
-                count[num] -= 1
+        max_digits = 0
+        while max_val:
+            max_digits += 1
+            max_val //= 10
         
-        return nums
+        place_val = 1
+        
+        
+        def bucket_sort():
+            buckets = [[] for _ in range(10)]
+            
+            for num in nums:
+                digit = int((abs(num) / place_val) % 10)
+                buckets[digit].append(num)
+            
+            i = 0
+            for digit in range(10):
+                for num in buckets[digit]:
+                    nums[i] = num
+                    i += 1
+        
+        
+        for _ in range(max_digits):
+            bucket_sort()
+            place_val *= 10
+        
+        positives, negatives = [], deque()
+        for num in nums:
+            if num >= 0:
+                positives.append(num)
+            else:
+                negatives.appendleft(num)
+        
+        return list(negatives) + positives
+                
