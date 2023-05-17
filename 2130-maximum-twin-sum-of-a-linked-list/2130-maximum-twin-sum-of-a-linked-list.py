@@ -21,8 +21,8 @@ class Solution:
         node = head
         max_twin_sum = float('-inf')
         
-        for i in range(len(second_half_vals)):
-            max_twin_sum = max(max_twin_sum, node.val + second_half_vals[len(second_half_vals) - i - 1])
+        while second_half_vals:
+            max_twin_sum = max(max_twin_sum, node.val + second_half_vals.pop())
             node = node.next
         
         return max_twin_sum
