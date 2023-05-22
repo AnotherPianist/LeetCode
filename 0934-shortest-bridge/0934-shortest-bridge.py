@@ -1,46 +1,47 @@
 class Solution:
     def shortestBridge(self, grid: List[List[int]]) -> int:
         n = len(grid)
-        first_x, first_y = -1, -1
         
-        # Find any land cell, and we treat it as a cell of island A.
-        for i in range(n):
-            for j in range(n):
-                if grid[i][j] == 1:
-                    first_x, first_y = i, j
-                    break
+        def find_first_land():
+            for i in range(n):
+                for j in range(n):
+                    if grid[i][j] == 1:
+                        return i, j
         
-        # bfsQueue for BFS on land cells of island A; secondBfsQueue for BFS on water cells.
-        bfs_queue = [(first_x, first_y)]
-        second_bfs_queue = [(first_x, first_y)]
-        grid[first_x][first_y] = 2
-        
-        # BFS for all land cells of island A and add them to second_bfs_queue.
-        while bfs_queue:
-            new_bfs = []
-            for x, y in bfs_queue:
-                for cur_x, cur_y in [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]:
-                    if 0 <= cur_x < n and 0 <= cur_y < n and grid[cur_x][cur_y] == 1:
-                        new_bfs.append((cur_x, cur_y))
-                        second_bfs_queue.append((cur_x, cur_y))
-                        grid[cur_x][cur_y] = 2
-            bfs_queue = new_bfs
+        def mark_first_island():
+            i_start, j_start = find_first_land()
+            grid[i_start][j_start] = 2
+            queue = deque([(i_start, j_start)])
+            first_island_nodes = deque([(i_start, j_start)])
+            
+            while queue:
+                for _ in range(len(queue)):
+                    i, j = queue.popleft()
 
-        distance = 0
-        while second_bfs_queue:
-            new_bfs = []
-            for x, y in second_bfs_queue:
-                for cur_x, cur_y in [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]:
-                    if 0 <= cur_x < n and 0 <= cur_y < n:
-                        if grid[cur_x][cur_y] == 1:
-                            return distance
-                        elif grid[cur_x][cur_y] == 0:
-                            new_bfs.append((cur_x, cur_y))
-                            grid[cur_x][cur_y] = -1
+                    for _i, _j in ((i - 1, j), (i, j + 1), (i + 1, j), (i, j - 1)):
+                        if 0 <= _i < n and 0 <= _j < n and grid[_i][_j] == 1:
+                            queue.append((_i, _j))
+                            first_island_nodes.append((_i, _j))
+                            grid[_i][_j] = 2
 
-            # Once we finish one round without finding land cells of island B, we will
-            # start the next round on all water cells that are 1 cell further away from
-            # island A and increment the distance by 1.
-            second_bfs_queue = new_bfs
-            distance += 1
-        return distance
+            return first_island_nodes
+        
+        def build_bridge(queue):
+            distance = 0
+            
+            while queue:
+                for _ in range(len(queue)):
+                    i, j = queue.popleft()
+
+                    for _i, _j in ((i - 1, j), (i, j + 1), (i + 1, j), (i, j - 1)):
+                        if 0 <= _i < n and 0 <= _j < n:
+                            if grid[_i][_j] == 1:
+                                return distance
+                            elif grid[_i][_j] == 0:
+                                queue.append((_i, _j))
+                                grid[_i][_j] = -1
+
+                distance += 1
+                    
+        
+        return build_bridge(mark_first_island())
