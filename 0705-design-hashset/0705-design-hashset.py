@@ -1,41 +1,28 @@
 class MyHashSet(object):
-
     def __init__(self):
-        """
-        Initialize your data structure here.
-        """
-        self.keyRange = 769
-        self.bucketArray = [Bucket() for i in range(self.keyRange)]
+        self.key = 769
+        self.buckets = [Bucket() for _ in range(self.key)]
 
-    def _hash(self, key):
-        return key % self.keyRange
+
+    def hash(self, key):
+        return key % self.key
+
 
     def add(self, key):
-        """
-        :type key: int
-        :rtype: None
-        """
-        bucketIndex = self._hash(key)
-        self.bucketArray[bucketIndex].insert(key)
+        bucketIndex = self.hash(key)
+        self.buckets[bucketIndex].insert(key)
+
 
     def remove(self, key):
-        """
-        :type key: int
-        :rtype: None
-        """
-        bucketIndex = self._hash(key)
-        self.bucketArray[bucketIndex].delete(key)
+        bucketIndex = self.hash(key)
+        self.buckets[bucketIndex].delete(key)
+
 
     def contains(self, key):
-        """
-        Returns true if this set contains the specified element
-        :type key: int
-        :rtype: bool
-        """
-        bucketIndex = self._hash(key)
-        return self.bucketArray[bucketIndex].exists(key)
+        bucketIndex = self.hash(key)
+        return self.buckets[bucketIndex].exists(key)
 
-    
+
 class Node:
     def __init__(self, val, next=None):
         self.val = val
