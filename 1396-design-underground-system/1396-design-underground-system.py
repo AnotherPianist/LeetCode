@@ -14,6 +14,8 @@ class UndergroundSystem:
 
     def checkOut(self, id: int, stationName: str, t: int) -> None:
         start_station, start_time = self.start_times[id]
+        del self.start_times[id]
+
         prev_time, prev_count = self.times[(start_station, stationName)]
         self.times[(start_station, stationName)] = (prev_time + t - start_time, prev_count + 1)
         
