@@ -3,11 +3,20 @@ from collections import defaultdict
 
 class Solution:
     def numOfMinutes(self, n: int, headID: int, manager: List[int], informTime: List[int]) -> int:
-        @cache
-        def get_notification_time(i):
-            if (manager_id := manager[i]) != -1:
-                return informTime[manager_id] + get_notification_time(manager_id)
-            else:
-                return 0
-
-        return max(get_notification_time(i) for i in range(n))
+        graph = defaultdict(list)
+        
+        for i in range(n):
+            if manager[i] != -1:
+                graph[manager[i]].append(i)
+        
+        stack = [(headID, 0)]
+        max_time = 0
+        
+        while stack:
+            informant, prev_time = stack.pop()
+            max_time = max(max_time, prev_time)
+        
+            for employee in graph[informant]:
+                stack.append((employee, prev_time + informTime[informant]))
+        
+        return max_time
