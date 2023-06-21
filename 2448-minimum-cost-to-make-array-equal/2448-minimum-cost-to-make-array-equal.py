@@ -1,22 +1,24 @@
 class Solution:
     def minCost(self, nums: List[int], cost: List[int]) -> int:
-        sorted_data = sorted((num, c) for num, c in zip(nums, cost))
-        n = len(cost)
+        def get_cost(base):
+            return sum(abs(base - num) * c for num, c in zip(nums, cost))
         
-        prefix_cost = [sorted_data[0][1]]
-        for i in range(1, n):
-            prefix_cost.append(prefix_cost[-1] + sorted_data[i][1])
+        left = right = nums[0]
+        for num in nums:
+            left = min(left, num)
+            right = max(right, num)
+            
+        res = get_cost(left)
         
-        total_cost = 0
-        
-        for i in range(1, n):
-            total_cost += sorted_data[i][1] * (sorted_data[i][0] - sorted_data[0][0])
-        res = total_cost
-        
-        for i in range(1, n):
-            gap = sorted_data[i][0] - sorted_data[i - 1][0]
-            total_cost += prefix_cost[i - 1] * gap
-            total_cost -= gap * (prefix_cost[n - 1] - prefix_cost[i - 1])
-            res = min(res, total_cost)
+        while left < right:
+            mid = left + (right - left) // 2
+            cost_1, cost_2 = get_cost(mid), get_cost(mid + 1)
+            
+            res = min(cost_1, cost_2)
+            
+            if cost_1 > cost_2:
+                left = mid + 1
+            else:
+                right = mid
         
         return res
