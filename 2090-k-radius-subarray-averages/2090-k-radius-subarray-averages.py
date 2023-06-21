@@ -10,13 +10,11 @@ class Solution:
         if subarray_len > n:
             return averages
         
-        prefix_sum = [0]
-        
-        for num in nums:
-            prefix_sum.append(prefix_sum[-1] + num)
-        
-        for i in range(k, n - k):
-            left, right = i - k, i + k
-            averages[i] = (prefix_sum[right + 1] - prefix_sum[left]) // subarray_len
+        window_sum = sum(nums[i] for i in range(subarray_len))
+        averages[k] = window_sum // subarray_len
+
+        for i in range(subarray_len, n):
+            window_sum = window_sum - nums[i - subarray_len] + nums[i]
+            averages[i - k] = window_sum // subarray_len
         
         return averages
