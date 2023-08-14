@@ -4,18 +4,18 @@ class Solution:
         Do not return anything, modify nums in-place instead.
         """
         n = len(nums)
-        left, right = 0, n - 1
-        i = 0
+        red = white = 0
+        blue = n - 1
         
-        while i <= right:
-            if nums[i] == 0:
-                nums[left], nums[i] = nums[i], nums[left]
-                left += 1
-                i += 1
-            elif nums[i] == 1:
-                i += 1
-            elif nums[i] == 2:
-                nums[i], nums[right] = nums[right], nums[i]
-                right -= 1
+        while white <= blue:
+            if nums[white] == 0:
+                nums[red], nums[white] = nums[white], nums[red]
+                red += 1
+                white += 1
+            elif nums[white] == 1:
+                white += 1
+            elif nums[white] == 2:
+                nums[white], nums[blue] = nums[blue], nums[white]
+                blue -= 1
         
         return nums
