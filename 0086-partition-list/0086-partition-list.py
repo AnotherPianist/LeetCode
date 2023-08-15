@@ -16,13 +16,13 @@ class Solution:
             if node.val < x:
                 less.next = node
                 less = less.next
-                node = node.next
             else:
                 not_less.next = node
                 not_less = not_less.next
-                node = node.next
-                not_less.next = None
-        
+            
+            node = node.next
+
+        not_less.next = None
         less.next = not_less_dummy.next
         
         return less_dummy.next
